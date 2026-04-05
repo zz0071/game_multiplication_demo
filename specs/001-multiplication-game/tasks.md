@@ -17,9 +17,9 @@
 
 **Purpose**: 建立目錄結構與基本 HTML 骨架，供所有使用者故事使用
 
-- [ ] T001 建立專案目錄結構（index.html / css/ / js/game/ / js/ui/ / js/data/ / js/audio/ / assets/images/ / assets/audio/）
-- [ ] T002 [P] 建立 index.html — 含 `<script type="module" src="./js/main.js">` 與所有畫面的 HTML 容器（`#screen-home`、`#screen-game`、`#screen-result`、`#screen-leaderboard`），初始隱藏非首頁
-- [ ] T003 [P] 建立 css/main.css — CSS 自訂屬性（顏色、字型、間距變數）、太空主題全域樣式、RWD Media Query 基礎（360px / 768px 斷點）
+- [X] T001 建立專案目錄結構（index.html / css/ / js/game/ / js/ui/ / js/data/ / js/audio/ / assets/images/ / assets/audio/）
+- [X] T002 [P] 建立 index.html — 含 `<script type="module" src="./js/main.js">` 與所有畫面的 HTML 容器（`#screen-home`、`#screen-game`、`#screen-result`、`#screen-leaderboard`），初始隱藏非首頁
+- [X] T003 [P] 建立 css/main.css — CSS 自訂屬性（顏色、字型、間距變數）、太空主題全域樣式、RWD Media Query 基礎（360px / 768px 斷點）
 
 **Checkpoint**: 目錄結構與入口 HTML 就緒，可開始業務邏輯開發
 
@@ -31,11 +31,11 @@
 
 **⚠️ CRITICAL**: 所有使用者故事的 UI 開發均依賴此 Phase 完成
 
-- [ ] T004 實作 js/game/Timer.js — `createTimer(durationSec, onTick, onExpire)` 回傳 `{ start, pause, resume, stop, getRemainingMs }`；使用 `performance.now()` 追蹤剩餘時間，不以重設秒數替代
-- [ ] T005 [P] 實作 js/game/QuestionGenerator.js — `generateQuestion(stage)`、`generateDistractors(correctAnswer)`、`shuffleOptions(options)`；含關卡難度對應表（關卡 1–2：10–30 × 1–3，…，9–10：50–99 × 5–9）與乘積 ≤ 999 過濾
-- [ ] T006 [P] 實作 js/game/Scoring.js — `calcStars(score)` 依分段回傳 1–10；`buildScoreRecord(session, totalPausedMs)` 從 GameSession 建立 ScoreRecord；計分規則：答對 +10，總分上限 500
-- [ ] T007 實作 js/game/GameSession.js — 管理遊戲局狀態（playerName、score、lives=10、currentStage、totalQuestionIndex、questions[]、isPaused、pausedAt）；提供 `answerQuestion(answer)`、`nextQuestion()`、`isGameOver()`、`isComplete()` 方法；依賴 T005、T006
-- [ ] T008 [P] 實作 js/main.js — 畫面路由切換函式 `showScreen(name)`（home/game/result/leaderboard）；監聽 CustomEvent `game:start`、`game:over`、`game:restart`、`nav:leaderboard`、`nav:home`
+- [X] T004 實作 js/game/Timer.js — `createTimer(durationSec, onTick, onExpire)` 回傳 `{ start, pause, resume, stop, getRemainingMs }`；使用 `performance.now()` 追蹤剩餘時間，不以重設秒數替代
+- [X] T005 [P] 實作 js/game/QuestionGenerator.js — `generateQuestion(stage)`、`generateDistractors(correctAnswer)`、`shuffleOptions(options)`；含關卡難度對應表（關卡 1–2：10–30 × 1–3，…，9–10：50–99 × 5–9）與乘積 ≤ 999 過濾
+- [X] T006 [P] 實作 js/game/Scoring.js — `calcStars(score)` 依分段回傳 1–10；`buildScoreRecord(session, totalPausedMs)` 從 GameSession 建立 ScoreRecord；計分規則：答對 +10，總分上限 500
+- [X] T007 實作 js/game/GameSession.js — 管理遊戲局狀態（playerName、score、lives=10、currentStage、totalQuestionIndex、questions[]、isPaused、pausedAt）；提供 `answerQuestion(answer)`、`nextQuestion()`、`isGameOver()`、`isComplete()` 方法；依賴 T005、T006
+- [X] T008 [P] 實作 js/main.js — 畫面路由切換函式 `showScreen(name)`（home/game/result/leaderboard）；監聽 CustomEvent `game:start`、`game:over`、`game:restart`、`nav:leaderboard`、`nav:home`
 
 **Checkpoint**: 業務邏輯核心完成，可在 console 驗證 `calcStars`、`generateQuestion`、`shuffleOptions` 等純函式
 
@@ -49,19 +49,19 @@
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] 實作 js/ui/HomeScreen.js — 渲染首頁（名稱輸入欄位、預設值「玩家」、「開始遊戲」按鈕）；名稱為空時使用預設值；點選後派發 `game:start` CustomEvent 含 `{ playerName }`
-- [ ] T010 [P] [US1] 建立 css/game.css — 遊戲主畫面版面（算式區敵機樣式、6 個選項圖卡 Grid 版面、生命值圖示列、計時進度條、暫停按鈕）；太空射擊視覺主題、RWD 適配
-- [ ] T011 [US1] 實作 js/ui/GameScreen.js — 渲染遊戲主畫面；顯示算式（被乘數 × 乘數 = ？）於敵機元素；渲染 6 個選項圖卡並綁定點擊事件；更新生命值圖示列、倒數進度條；處理答題回饋流程（答對/答錯/超時後延遲進入下一題）；使用 Timer（T004）、GameSession（T007）；依賴 T010
-- [ ] T012 [US1] 實作 js/ui/Animations.js — `playCorrect(enemyEl)`（CSS class `exploding` + animationend 清除）；`playWrong(shipEl)`（CSS class `shaking`）；`playStageClear()`（過關慶祝動畫覆層）；`playGameOver()`（淡入效果）；依賴 css/game.css 中的 @keyframes 定義
-- [ ] T013 [US1] 實作 js/ui/ResultScreen.js（基礎版）— 渲染星等（1–10 顆星）、總分、答對題數、答錯題數、完成時間；「再玩一次」按鈕派發 `game:restart`；建立 css/result.css 版面；依賴 T006（Scoring）
-- [ ] T014 [US1] 整合 GameSession + GameScreen + ResultScreen — 在 main.js 中監聽 `game:start`/`game:over`，協調初始化 GameSession、啟動 GameScreen、結束後切換 ResultScreen；依賴 T007、T009、T011、T013
-- [ ] T015 [P] [US1] 新增 assets/images/ 基礎視覺資源 — player-ship.svg（玩家戰機）、enemy-ship.svg（敋機/算式容器）、heart.svg（生命値圖示）、explosion.png（擊落動畫幀）、stars-bg.svg 或 CSS 純星空背景
+- [X] T009 [US1] 實作 js/ui/HomeScreen.js — 渲染首頁（名稱輸入欄位、預設值「玩家」、「開始遊戲」按鈕）；名稱為空時使用預設值；點選後派發 `game:start` CustomEvent 含 `{ playerName }`
+- [X] T010 [P] [US1] 建立 css/game.css — 遊戲主畫面版面（算式區敵機樣式、6 個選項圖卡 Grid 版面、生命值圖示列、計時進度條、暫停按鈕）；太空射擊視覺主題、RWD 適配
+- [X] T011 [US1] 實作 js/ui/GameScreen.js — 渲染遊戲主畫面；顯示算式（被乘數 × 乘數 = ？）於敵機元素；渲染 6 個選項圖卡並綁定點擊事件；更新生命值圖示列、倒數進度條；處理答題回饋流程（答對/答錯/超時後延遲進入下一題）；使用 Timer（T004）、GameSession（T007）；依賴 T010
+- [X] T012 [US1] 實作 js/ui/Animations.js — `playCorrect(enemyEl)`（CSS class `exploding` + animationend 清除）；`playWrong(shipEl)`（CSS class `shaking`）；`playStageClear()`（過關慶祝動畫覆層）；`playGameOver()`（淡入效果）；依賴 css/game.css 中的 @keyframes 定義
+- [X] T013 [US1] 實作 js/ui/ResultScreen.js（基礎版）— 渲染星等（1–10 顆星）、總分、答對題數、答錯題數、完成時間；「再玩一次」按鈕派發 `game:restart`；建立 css/result.css 版面；依賴 T006（Scoring）
+- [X] T014 [US1] 整合 GameSession + GameScreen + ResultScreen — 在 main.js 中監聽 `game:start`/`game:over`，協調初始化 GameSession、啟動 GameScreen、結束後切換 ResultScreen；依賴 T007、T009、T011、T013
+- [X] T015 [P] [US1] 新增 assets/images/ 基礎視覺資源 — player-ship.svg（玩家戰機）、enemy-ship.svg（敵機/算式容器）、heart.svg（生命値圖示）、explosion.png（擊落動畫幀）、stars-bg.svg 或 CSS 純星空背景
 
 **Checkpoint**: US1 完整可測 — 可從首頁到結束畫面完成一局遊戲，分數與星等正確計算
 
 ---
 
-## Phase 4: User Story 2 — 遊戲暫停功能 (Priority: P2)
+## Phase 4: User Story 2 — 遊戲暫停與繼續 (Priority: P2)
 
 **Goal**: 遊戲進行中玩家可暫停/繼續，倒數凍結且不計入完成時間
 
@@ -69,8 +69,8 @@
 
 ### Implementation for User Story 2
 
-- [ ] T016 [US2] 實作 js/ui/PauseOverlay.js — 渲染暫停遮罩 HTML/CSS（半透明覆層 + 「繼續」按鈕）；顯示時呼叫 `timer.pause()` 並累計 `totalPausedMs`；隱藏時呼叫 `timer.resume()`；依賴 T004（Timer）
-- [ ] T017 [US2] 在 GameScreen.js 中整合暫停按鈕 — 新增暫停按鈕 UI；點擊後顯示 PauseOverlay；暫停期間禁用所有選項圖卡點擊事件（`pointer-events: none`）；依賴 T011、T016
+- [X] T016 [US2] 實作 js/ui/PauseOverlay.js — 渲染暫停遮罩 HTML/CSS（半透明覆層 + 「繼續」按鈕）；顯示時呼叫 `timer.pause()` 並累計 `totalPausedMs`；隱藏時呼叫 `timer.resume()`；依賴 T004（Timer）
+- [X] T017 [US2] 在 GameScreen.js 中整合暫停按鈕 — 新增暫停按鈕 UI；點擊後顯示 PauseOverlay；暫停期間禁用所有選項圖卡點擊事件（`pointer-events: none`）；依賴 T011、T016
 
 **Checkpoint**: US2 完整可測 — 暫停/繼續流程正確，完成時間不含暫停時長
 
@@ -84,8 +84,8 @@
 
 ### Implementation for User Story 3
 
-- [ ] T018 [P] [US3] 實作 js/data/CsvExporter.js — `buildCsvContent(record)` 回傳含標頭列的 CSV 字串；`buildCsvFilename(datetime)` 將 `'YYYY-MM-DD HH:mm:ss'` 轉為 `'game_score_YYYYMMDD_HHMMSS.csv'`；`downloadScoreCsv(record)` 建立 BOM UTF-8 Blob 並觸發 `<a>` 下載；三個函式均為可純函式測試設計
-- [ ] T019 [US3] 擴充 ResultScreen.js — 新增錯題回顧區塊（全部答對時顯示「本局全部答對！」，否則顯示每筆錯題：關卡編號、算式、玩家答案、正確答案）；新增「下載成績 CSV」按鈕，點擊呼叫 `downloadScoreCsv`；依賴 T013、T018
+- [X] T018 [P] [US3] 實作 js/data/CsvExporter.js — `buildCsvContent(record)` 回傳含標頭列的 CSV 字串；`buildCsvFilename(datetime)` 將 `'YYYY-MM-DD HH:mm:ss'` 轉為 `'game_score_YYYYMMDD_HHMMSS.csv'`；`downloadScoreCsv(record)` 建立 BOM UTF-8 Blob 並觸發 `<a>` 下載；三個函式均為可純函式測試設計
+- [X] T019 [US3] 擴充 ResultScreen.js — 新增錯題回顧區塊（全部答對時顯示「本局全部答對！」，否則顯示每筆錯題：關卡編號、算式、玩家答案、正確答案）；新增「下載成績 CSV」按鈕，點擊呼叫 `downloadScoreCsv`；依賴 T013、T018
 
 **Checkpoint**: US3 完整可測 — 錯題顯示正確、CSV 下載含 BOM 且 Excel 可正常顯示繁中
 
@@ -99,9 +99,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T020 [P] [US4] 實作 js/data/Storage.js — `getLeaderboard()` 從 localStorage key `'multiplicationGame_leaderboard'` 讀取 JSON 並回傳陣列（空時回傳 `[]`）；`saveToLeaderboard(record)` 插入、依 score 降序排序、截斷至 10 筆後存回；`clearLeaderboard()` 供測試用
-- [ ] T021 [US4] 實作 js/ui/LeaderboardScreen.js — 渲染排行榜畫面（標題「🏆 排行榜 TOP 10」、表格含排名/玩家名稱/分數/星星/日期）；排行榜為空時顯示「尚無紀錄，快來挑戰！」；「返回首頁」按鈕派發 `nav:home`；依賴 T020
-- [ ] T022 [US4] 整合成績自動儲存 — 在 main.js 的 `game:over` 監聽器中，於切換 ResultScreen 前呼叫 `saveToLeaderboard(record)`；ResultScreen「查看排行榜」按鈕派發 `nav:leaderboard`；依賴 T014、T020、T021
+- [X] T020 [P] [US4] 實作 js/data/Storage.js — `getLeaderboard()` 從 localStorage key `'multiplicationGame_leaderboard'` 讀取 JSON 並回傳陣列（空時回傳 `[]`）；`saveToLeaderboard(record)` 插入、依 score 降序排序、截斷至 10 筆後存回；`clearLeaderboard()` 供測試用
+- [X] T021 [US4] 實作 js/ui/LeaderboardScreen.js — 渲染排行榜畫面（標題「🏆 排行榜 TOP 10」、表格含排名/玩家名稱/分數/星星/日期）；排行榜為空時顯示「尚無紀錄，快來挑戰！」；「返回首頁」按鈕派發 `nav:home`；依賴 T020
+- [X] T022 [US4] 整合成績自動儲存 — 在 main.js 的 `game:over` 監聽器中，於切換 ResultScreen 前呼叫 `saveToLeaderboard(record)`；ResultScreen「查看排行榜」按鈕派發 `nav:leaderboard`；依賴 T014、T020、T021
 
 **Checkpoint**: US4 完整可測 — 排行榜儲存/讀取正確，頁面重新整理後資料保留
 
@@ -111,12 +111,12 @@
 
 **Purpose**: 補齊音效、完整動畫、RWD 微調，提升遊戲體驗到規格標準
 
-- [ ] T023 [P] 實作 js/audio/AudioManager.js — `init()` 預載 5 個音效（需使用者首次互動後才呼叫）；`play(name)` 播放指定音效（correct/wrong/stageClear/gameOver/bgm）；`toggleBgm()` 開關背景音樂循環；音效檔放於 assets/audio/（bgm.mp3、correct.mp3、wrong.mp3、stage-clear.mp3、game-over.mp3）
-- [ ] T024 [P] 整合 AudioManager 至 GameScreen、ResultScreen — GameScreen 答對/答錯/超時/過關/遊戲結束時呼叫對應音效；ResultScreen 進入時播放 gameOver 音效；首次互動（開始遊戲按鈕）後啟動 bgm；依賴 T011、T013、T023
-- [ ] T025 [P] 補齊 CSS @keyframes 動畫 — css/game.css 中加入 `explode`（擊落）、`shake`（受損）、`stageClear`（過關慶祝）、`fadeIn`（成績統計畫面）keyframes；確認動畫時長符合規格（擊落 ≤ 500ms，成績畫面 ≤ 1s）；依賴 T010
-- [ ] T026 [P] RWD 完整測試與修正 — 在 360px（手機）/ 768px（平板）/ 1920px（桌面）三個寬度下確認版面正確；選項圖卡在手機上不超出螢幕；觸控事件正常觸發
-- [ ] T027 新增 assets/audio/ 音效資源佔位符 README — 說明音效格式需求（MP3，≤ 200KB/檔）與來源建議（免費授權音效網站）；若無真實音效則提供 silent.mp3 示範檔讓 AudioManager 不報錯
-- [ ] T028 [P] 效能驗證 SC-007 — 在決成畫面使用瀏覽器 DevTools Performance 面板，錄製點擊選項至回饋動畫展示的時間，確認一致 ≤ 200ms；若超過則回查 GameScreen.js 動畫觸發逻輯
+- [X] T023 [P] 實作 js/audio/AudioManager.js — `init()` 預載 5 個音效（需使用者首次互動後才呼叫）；`play(name)` 播放指定音效（correct/wrong/stageClear/gameOver/bgm）；`toggleBgm()` 開關背景音樂循環；音效檔放於 assets/audio/（bgm.mp3、correct.mp3、wrong.mp3、stage-clear.mp3、game-over.mp3）
+- [X] T024 [P] 整合 AudioManager 至 GameScreen、ResultScreen — GameScreen 答對/答錯/超時/過關/遊戲結束時呼叫對應音效；ResultScreen 進入時播放 gameOver 音效；首次互動（開始遊戲按鈕）後啟動 bgm；依賴 T011、T013、T023
+- [X] T025 [P] 補齊 CSS @keyframes 動畫 — css/game.css 中加入 `explode`（擊落）、`shake`（受損）、`stageClear`（過關慶祝）、`fadeIn`（成績統計畫面）keyframes；確認動畫時長符合規格（擊落 ≤ 500ms，成績畫面 ≤ 1s）；依賴 T010
+- [X] T026 [P] RWD 完整測試與修正 — 在 360px（手機）/ 768px（平板）/ 1920px（桌面）三個寬度下確認版面正確；選項圖卡在手機上不超出螢幕；觸控事件正常觸發
+- [X] T027 新增 assets/audio/ 音效資源佔位符 README — 說明音效格式需求（MP3，≤ 200KB/檔）與來源建議（免費授權音效網站）；若無真實音效則提供 silent.mp3 示範檔讓 AudioManager 不報錯
+- [X] T028 [P] 效能驗證 SC-007 — 在遊戲進行中，使用瀏覽器 DevTools Performance 面板，錄製點擊選項至回饋動畫展示的時間，確認一致 ≤ 200ms；若超過則回查 GameScreen.js 動畫觸發邏輯
 
 **Checkpoint**: 遊戲體驗完整 — 音效、動畫、RWD 均符合規格，可部署至 GitHub Pages
 

@@ -49,6 +49,7 @@ HTML5 / CSS3 / JavaScript (ES2020+，ES Modules):
 ## Recent Changes
 
 - 001-multiplication-game: 計畫完成（2026-04-05）— 純前端乘法遊戲，ES Modules 架構，含計時器暫停、localStorage 排行榜、CSV 下載（Blob）、CSS Animation 動畫、GitHub Pages 部署
+- 001-multiplication-game: 實作完成（2026-04-05）— T001–T028 全部完成；建立 22 個程式碼檔案（index.html、3 個 CSS、14 個 JS 模組、3 個 SVG、README）
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

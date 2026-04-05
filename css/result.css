@@ -1,0 +1,217 @@
+/* =============================================================
+   result.css — 成績統計、排行榜畫面樣式
+   含 fadeIn @keyframes（SC-004：≤ 1 秒淡入）
+   ============================================================= */
+
+/* ---------- 成績統計畫面 ---------- */
+#screen-result {
+  background: radial-gradient(ellipse at 50% 0%, #0a1a3a 0%, #050a1a 60%);
+  overflow-y: auto;
+}
+
+.result-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 600px;
+  width: 100%;
+  animation: fadeIn 0.8s ease-out both;
+}
+
+.result-title {
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+/* ---------- 星等顯示 ---------- */
+.stars-display {
+  font-size: 2rem;
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+.stars-display .star-filled { color: var(--color-accent); }
+.stars-display .star-empty  { color: var(--color-border);  opacity: .4; }
+
+/* ---------- 分數統計 ---------- */
+.score-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm) var(--space-lg);
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+}
+
+.stat-value {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.stat-value--accent { color: var(--color-accent); }
+.stat-value--success { color: var(--color-success); }
+.stat-value--danger  { color: var(--color-danger); }
+
+/* ---------- 錯題回顧 ---------- */
+.wrong-answers {
+  width: 100%;
+  max-width: 520px;
+}
+
+.wrong-answers-title {
+  font-size: var(--font-size-base);
+  color: var(--color-text-dim);
+  margin-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-xs);
+}
+
+.all-correct-msg {
+  text-align: center;
+  color: var(--color-success);
+  font-weight: 600;
+  padding: var(--space-md);
+  background: rgba(82, 196, 26, 0.1);
+  border: 1px solid rgba(82, 196, 26, 0.3);
+  border-radius: var(--radius-md);
+}
+
+.wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.wrong-item {
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr 1fr;
+  gap: var(--space-xs);
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(255, 77, 79, 0.08);
+  border: 1px solid rgba(255, 77, 79, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.wrong-item-stage { color: var(--color-text-dim); }
+.wrong-item-q     { font-weight: 600; color: var(--color-text); }
+.wrong-item-player { color: var(--color-danger); }
+.wrong-item-correct { color: var(--color-success); }
+
+/* ---------- 操作按鈕區 ---------- */
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+/* ---------- 排行榜畫面 ---------- */
+#screen-leaderboard {
+  background: radial-gradient(ellipse at 50% 0%, #0a1a3a 0%, #050a1a 60%);
+  overflow-y: auto;
+}
+
+.leaderboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 600px;
+  width: 100%;
+  animation: fadeIn 0.6s ease-out both;
+}
+
+.leaderboard-title {
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  letter-spacing: 2px;
+}
+
+.leaderboard-empty {
+  color: var(--color-text-dim);
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+.leaderboard-table-el {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.leaderboard-table-el th,
+.leaderboard-table-el td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.leaderboard-table-el th {
+  color: var(--color-text-dim);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.leaderboard-table-el tr:hover td {
+  background: rgba(30, 144, 255, 0.05);
+}
+
+.rank-1 td { color: #ffd700; font-weight: 700; }
+.rank-2 td { color: #c0c0c0; }
+.rank-3 td { color: #cd7f32; }
+
+/* ---------- @keyframes ---------- */
+
+/* 成績畫面淡入（SC-004：≤ 1 秒）*/
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ---------- RWD ---------- */
+@media (max-width: 480px) {
+  .score-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xs);
+    padding: var(--space-md);
+  }
+
+  .wrong-item {
+    grid-template-columns: 1fr 1fr;
+    font-size: 0.75rem;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .result-actions .btn {
+    width: 100%;
+  }
+}

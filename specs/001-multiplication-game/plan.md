@@ -27,7 +27,7 @@
 | 原則 | 狀態 | 說明 |
 |------|------|------|
 | I. Code Quality Standards | ✅ 通過 | 採 ES Modules 分層架構；明確命名；業務邏輯加繁中注解 |
-| II. Testing Discipline | ⚠️ 已調整 | 純靜態前端無標準測試框架，改為：核心函式設計為純函式（無 DOM 依賴），可直接 `console.assert` 或 Vitest 測試；业務邏輯 100% 可手動驗證 |
+| II. Testing Discipline | ⚠️ 已調整 | 純靜態前端無標準測試框架，改為：核心函式設計為純函式（無 DOM 依賴），可直接 `console.assert` 或 Vitest 測試；業務邏輯 100% 可手動驗證 |
 | III. UX Consistency | ✅ 通過 | 統一繁中介面；按鈕狀態明確（disabled/enabled）；過渡動畫 >200ms 均有視覺回饋 |
 | IV. Performance Requirements | ✅ 通過 | 無 API 請求；所有計算在本機；計時器用 `performance.now()` 精確實作 |
 | V. Documentation Language | ✅ 通過 | 所有文件以繁體中文；程式碼識別碼用英文，業務邏輯注解繁中 |

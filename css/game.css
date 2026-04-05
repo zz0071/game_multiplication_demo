@@ -1,0 +1,361 @@
+/* =============================================================
+   game.css — 遊戲主畫面元件樣式
+   含：HUD、敵機、選項圖卡、計時條、暫停遮罩、@keyframes 動畫
+   ============================================================= */
+
+/* ---------- 遊戲畫面基礎 ---------- */
+#screen-game {
+  background:
+    radial-gradient(ellipse at 50% 0%, #0a1a3a 0%, #050a1a 60%);
+  flex-direction: column;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* ---------- HUD 頭部資訊列 ---------- */
+.game-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(5, 10, 26, 0.8);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  min-height: 56px;
+  position: relative;
+  z-index: 10;
+}
+
+.hud-lives {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+}
+
+.life-icon {
+  font-size: 1.2rem;
+  transition: opacity var(--duration-fast);
+}
+
+.life-icon--lost {
+  opacity: 0.2;
+  filter: grayscale(1);
+}
+
+.hud-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud-stage {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.hud-score {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ---------- 遊戲區域 ---------- */
+.game-arena {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+  overflow: hidden;
+}
+
+/* ---------- 敵機（算式容器） ---------- */
+.enemy-ship {
+  width: min(320px, 80vw);
+  aspect-ratio: 2 / 1;
+  background: linear-gradient(135deg, #1a2a5e, #0d1b3e);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 20px rgba(30, 144, 255, 0.3),
+    inset 0 0 30px rgba(30, 144, 255, 0.1);
+  position: relative;
+  transition: transform var(--duration-mid);
+}
+
+/* 敵機擊落動畫 */
+.enemy-ship.exploding {
+  animation: explode 500ms ease-out forwards;
+}
+
+/* 敵機未受損閃爍（題目切換提示） */
+.enemy-ship.entering {
+  animation: enemyEnter 400ms ease-out;
+}
+
+.equation {
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+  user-select: none;
+}
+
+/* ---------- 倒數計時條 ---------- */
+.timer-bar-wrap {
+  width: 100%;
+  max-width: 480px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.timer-bar {
+  height: 100%;
+  width: 100%;
+  background: var(--color-primary);
+  border-radius: 4px;
+  transition: width 0.9s linear, background 0.5s;
+  transform-origin: left;
+}
+
+.timer-bar--warning {
+  background: var(--color-accent);
+}
+
+.timer-bar--danger {
+  background: var(--color-danger);
+}
+
+/* ---------- 選項圖卡 Grid ---------- */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 480px;
+}
+
+.option-card {
+  aspect-ratio: 1.6 / 1;
+  background: linear-gradient(135deg, #0f2050, #091530);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform var(--duration-fast),
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast),
+    background var(--duration-fast);
+}
+
+.option-card:hover:not(.disabled) {
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, #1a3a80, #0d2050);
+  transform: scale(1.04);
+  box-shadow: 0 0 12px rgba(30, 144, 255, 0.4);
+}
+
+.option-card:active:not(.disabled) {
+  transform: scale(0.97);
+}
+
+.option-card.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.option-card.correct {
+  border-color: var(--color-success);
+  background: linear-gradient(135deg, #0a3a1a, #062510);
+  box-shadow: 0 0 16px rgba(82, 196, 26, 0.5);
+  animation: cardCorrect 300ms ease;
+}
+
+.option-card.wrong {
+  border-color: var(--color-danger);
+  background: linear-gradient(135deg, #3a0a0a, #250606);
+  box-shadow: 0 0 16px rgba(255, 77, 79, 0.5);
+  animation: cardWrong 300ms ease;
+}
+
+/* ---------- 玩家飛船 ---------- */
+.player-ship {
+  position: absolute;
+  bottom: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 8px var(--color-primary));
+  z-index: 5;
+  pointer-events: none;
+  transition: transform var(--duration-mid);
+}
+
+.player-ship.hit {
+  animation: playerHit 400ms ease;
+}
+
+/* ---------- 過關慶祝覆層 ---------- */
+.stage-clear-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 144, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  animation: stageClearIn 800ms ease-out forwards;
+  pointer-events: none;
+}
+
+.stage-clear-text {
+  font-size: var(--font-size-2xl);
+  font-weight: 900;
+  color: var(--color-accent);
+  text-align: center;
+  text-shadow: 0 0 20px rgba(247, 201, 72, 0.8);
+  animation: stageClearText 800ms ease-out forwards;
+}
+
+/* ---------- 暫停遮罩 ---------- */
+.pause-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 10, 26, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.pause-overlay--hidden {
+  display: none;
+}
+
+.pause-modal {
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  box-shadow: 0 0 40px rgba(30, 144, 255, 0.2);
+}
+
+.pause-title {
+  font-size: var(--font-size-xl);
+  color: var(--color-accent);
+  letter-spacing: 2px;
+}
+
+/* ---------- @keyframes 動畫定義 ---------- */
+
+/* 敵機擊落 */
+@keyframes explode {
+  0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
+  30%  { transform: scale(1.15); opacity: 1; filter: brightness(3) saturate(0); }
+  60%  { transform: scale(0.9); opacity: 0.6; filter: brightness(2); }
+  100% { transform: scale(0); opacity: 0; filter: brightness(1); }
+}
+
+/* 敵機進場 */
+@keyframes enemyEnter {
+  0%   { transform: translateY(-20px); opacity: 0; }
+  100% { transform: translateY(0);     opacity: 1; }
+}
+
+/* 玩家戰機受損 */
+@keyframes playerHit {
+  0%   { transform: translateX(-50%) scale(1);    filter: brightness(1); }
+  20%  { transform: translateX(-50%) scale(1.1);  filter: brightness(2) hue-rotate(120deg); }
+  40%  { transform: translateX(-50%) scale(0.9);  filter: brightness(1); }
+  60%  { transform: translateX(-50%) scale(1.05); filter: brightness(1.5); }
+  100% { transform: translateX(-50%) scale(1);    filter: brightness(1); }
+}
+
+/* 選項圖卡答對 */
+@keyframes cardCorrect {
+  0%   { transform: scale(1);   }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1);   }
+}
+
+/* 選項圖卡答錯 */
+@keyframes cardWrong {
+  0%   { transform: translateX(0);   }
+  20%  { transform: translateX(-6px); }
+  40%  { transform: translateX(6px);  }
+  60%  { transform: translateX(-4px); }
+  80%  { transform: translateX(4px);  }
+  100% { transform: translateX(0);   }
+}
+
+/* 過關慶祝覆層淡入淡出 */
+@keyframes stageClearIn {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 過關文字縮放 */
+@keyframes stageClearText {
+  0%   { transform: scale(0.5); opacity: 0; }
+  30%  { transform: scale(1.1); opacity: 1; }
+  70%  { transform: scale(1.0); opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+/* ---------- RWD ---------- */
+@media (max-width: 480px) {
+  .options-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xs);
+  }
+
+  .option-card {
+    aspect-ratio: 1.2 / 1;
+    font-size: 1rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .enemy-ship {
+    width: 92vw;
+  }
+
+  .game-header {
+    padding: var(--space-xs) var(--space-sm);
+    min-height: 48px;
+  }
+}
+
+@media (min-width: 768px) {
+  .options-grid {
+    max-width: 560px;
+  }
+
+  .enemy-ship {
+    width: 400px;
+  }
+}

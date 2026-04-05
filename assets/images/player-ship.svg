@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 80" width="60" height="80">
+  <!-- 玩家戰機 — 朝上的太空飛船 -->
+  <defs>
+    <linearGradient id="shipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#59b2ff"/>
+      <stop offset="100%" stop-color="#1e90ff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- 機身 -->
+  <polygon points="30,4 48,64 30,54 12,64" fill="url(#shipGrad)" filter="url(#glow)"/>
+  <!-- 駕駛艙 -->
+  <ellipse cx="30" cy="30" rx="8" ry="10" fill="#a8d8ff" opacity="0.9"/>
+  <!-- 左翼 -->
+  <polygon points="12,64 2,76 20,68" fill="#0d6bbf"/>
+  <!-- 右翼 -->
+  <polygon points="48,64 58,76 40,68" fill="#0d6bbf"/>
+  <!-- 引擎噴射 -->
+  <ellipse cx="30" cy="66" rx="6" ry="4" fill="#f7c948" opacity="0.8"/>
+  <ellipse cx="30" cy="68" rx="3" ry="6" fill="#ff6b35" opacity="0.6"/>
+</svg>

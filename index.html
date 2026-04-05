@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>太空乘法大戰</title>
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/game.css">
+  <link rel="stylesheet" href="./css/result.css">
+</head>
+<body>
+
+  <!-- ===== 首頁 ===== -->
+  <div id="screen-home" class="screen screen--active">
+    <div class="stars-bg"></div>
+    <div class="home-container">
+      <h1 class="game-title">🚀 太空乘法大戰</h1>
+      <p class="game-subtitle">挑戰 10 關卡，成為乘法大師！</p>
+      <div class="home-form">
+        <label for="player-name" class="form-label">玩家名稱</label>
+        <input
+          id="player-name"
+          type="text"
+          class="name-input"
+          placeholder="玩家"
+          maxlength="20"
+          autocomplete="off"
+        >
+        <button id="btn-start" class="btn btn--primary btn--large">🚀 開始遊戲</button>
+      </div>
+      <button id="btn-leaderboard-home" class="btn btn--ghost">🏆 查看排行榜</button>
+    </div>
+  </div>
+
+  <!-- ===== 遊戲主畫面 ===== -->
+  <div id="screen-game" class="screen screen--hidden">
+    <!-- HUD 資訊列 -->
+    <header class="game-header">
+      <div class="hud-lives" id="hud-lives" aria-label="生命值"></div>
+      <div class="hud-center">
+        <span class="hud-stage" id="hud-stage">關卡 1</span>
+        <span class="hud-score" id="hud-score">0 分</span>
+      </div>
+      <button id="btn-pause" class="btn btn--icon" aria-label="暫停遊戲">⏸</button>
+    </header>
+
+    <!-- 遊戲區域 -->
+    <main class="game-arena">
+      <!-- 敵機（算式容器） -->
+      <div class="enemy-ship" id="enemy-ship">
+        <span class="equation" id="equation">? × ? = ?</span>
+      </div>
+
+      <!-- 倒數計時條 -->
+      <div class="timer-bar-wrap" aria-label="剩餘時間">
+        <div class="timer-bar" id="timer-bar"></div>
+      </div>
+
+      <!-- 6 個選項圖卡 -->
+      <div class="options-grid" id="options-grid" role="group" aria-label="選項"></div>
+    </main>
+
+    <!-- 玩家飛船 -->
+    <div class="player-ship" id="player-ship" aria-hidden="true">🚀</div>
+
+    <!-- 暫停遮罩（T016） -->
+    <div id="pause-overlay" class="pause-overlay pause-overlay--hidden" role="dialog" aria-modal="true" aria-label="遊戲暫停">
+      <div class="pause-modal">
+        <h2 class="pause-title">⏸ 遊戲暫停</h2>
+        <button id="btn-resume" class="btn btn--primary btn--large">▶ 繼續遊戲</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 成績統計畫面 ===== -->
+  <div id="screen-result" class="screen screen--hidden">
+    <div class="result-container">
+      <h2 class="result-title">遊戲結束！</h2>
+      <div class="stars-display" id="stars-display" aria-label="星等評分"></div>
+      <div class="score-stats" id="score-stats"></div>
+      <section class="wrong-answers" id="wrong-answers" aria-label="錯題回顧"></section>
+      <div class="result-actions">
+        <button id="btn-download-csv" class="btn btn--secondary">📥 下載成績 CSV</button>
+        <button id="btn-view-leaderboard" class="btn btn--secondary">🏆 排行榜</button>
+        <button id="btn-restart" class="btn btn--primary btn--large">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 排行榜畫面 ===== -->
+  <div id="screen-leaderboard" class="screen screen--hidden">
+    <div class="leaderboard-container">
+      <h2 class="leaderboard-title">🏆 排行榜 TOP 10</h2>
+      <div id="leaderboard-table"></div>
+      <button id="btn-back-home" class="btn btn--ghost">← 返回首頁</button>
+    </div>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

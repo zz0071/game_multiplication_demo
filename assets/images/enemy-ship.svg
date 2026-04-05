@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60">
+  <!-- 敵機 — 橢圓形飛碟，用作算式容器 -->
+  <defs>
+    <linearGradient id="enemyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a3a80"/>
+      <stop offset="100%" stop-color="#0d1b3e"/>
+    </linearGradient>
+    <filter id="enemyGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- 飛碟主體 -->
+  <ellipse cx="60" cy="32" rx="55" ry="24" fill="url(#enemyGrad)" stroke="#1e90ff" stroke-width="2" filter="url(#enemyGlow)"/>
+  <!-- 駕駛艙頂部 -->
+  <ellipse cx="60" cy="22" rx="22" ry="12" fill="#0f2050" stroke="#1e90ff" stroke-width="1.5"/>
+  <ellipse cx="60" cy="20" rx="14" ry="8" fill="#1a3a8a" opacity="0.8"/>
+  <!-- 底部燈光裝飾 -->
+  <circle cx="30" cy="38" r="3" fill="#f7c948" opacity="0.8"/>
+  <circle cx="60" cy="42" r="3" fill="#f7c948" opacity="0.8"/>
+  <circle cx="90" cy="38" r="3" fill="#f7c948" opacity="0.8"/>
+</svg>
