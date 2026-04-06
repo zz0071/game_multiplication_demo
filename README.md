@@ -146,8 +146,7 @@ git remote add origin https://github.com/你的帳號/game_multiplication_demo.g
 git push -u origin main
 
 
-### 執行網址
-https://zz0071.github.io/game_multiplication_demo/
+
 
 
 📄 授權
