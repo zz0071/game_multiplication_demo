@@ -35,6 +35,7 @@ export class GameScreen {
     this._shipEl     = container.querySelector('#player-ship');
     this._enemyEl    = container.querySelector('#enemy-ship');
     this._pauseBtn   = container.querySelector('#btn-pause');
+    this._bgmBtn     = container.querySelector('#btn-bgm');
 
     this._pauseOverlay = new PauseOverlay(
       container.querySelector('#pause-overlay'),
@@ -48,6 +49,7 @@ export class GameScreen {
     this._answering   = false; // 防止重複點擊
 
     this._pauseBtn.addEventListener('click', () => this._onPause());
+    this._bgmBtn.addEventListener('click', () => this._onToggleBgm());
     this._pauseOverlay.onResume = () => this._onResume();
   }
 
@@ -202,7 +204,15 @@ export class GameScreen {
     this._timer.resume();
   }
 
-  // ── 遊戲結束 ─────────────────────────────────────────────
+  // ── BGM 開關 ──────────────────────────────────────────────
+  _onToggleBgm() {
+    const isOn = AudioManager.toggleBgm();
+    this._bgmBtn.textContent  = isOn ? '🔊' : '🔇';
+    this._bgmBtn.classList.toggle('btn--bgm-on',  isOn);
+    this._bgmBtn.classList.toggle('btn--bgm-off', !isOn);
+  }
+
+
   _endGame() {
     if (this._timer) this._timer.stop();
     AudioManager.stop('bgm');

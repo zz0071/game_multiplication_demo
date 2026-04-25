@@ -183,6 +183,15 @@ html, body {
   background: rgba(255,255,255,.15);
 }
 
+/* BGM 按鈕狀態（開/關） */
+.btn--bgm-on {
+  color: #facc15; /* 黃色：音樂播放中 */
+}
+
+.btn--bgm-off {
+  color: rgba(255,255,255,.4); /* 灰暗：靜音 */
+}
+
 .btn--large {
   padding: var(--space-md) var(--space-xl);
   font-size: var(--font-size-lg);
