@@ -1,6 +1,6 @@
 # Game State Contracts: 太空射擊風格乘法練習網頁遊戲
 
-**Date**: 2026-04-05  
+**Date**: 2026-04-05（2026-04-25 更新）  
 **Feature**: [spec.md](../spec.md) | [data-model.md](../data-model.md)
 
 此文件定義遊戲各模組的公開介面契約（JavaScript 函式簽名與行為規範）。  
@@ -41,7 +41,7 @@ function shuffleOptions(options): number[]
 ```javascript
 /**
  * 計算對應分數的星等（1–10 顆）
- * @param {number} score - 總分（0–500）
+ * @param {number} score - 總分（0–1500）
  * @returns {number}     - 星等（1–10）
  */
 function calcStars(score): number
@@ -50,7 +50,7 @@ function calcStars(score): number
  * 從 GameSession 建立 ScoreRecord
  * @param {GameSession} session  - 已結束的遊戲局
  * @param {number} totalPausedMs - 總暫停毫秒數
- * @returns {ScoreRecord}
+ * @returns {ScoreRecord}        - 含 coinsEarned = floor(score / 10)
  */
 function buildScoreRecord(session, totalPausedMs): ScoreRecord
 ```
@@ -78,7 +78,59 @@ interface TimerHandle {
   resume(): void   // 從剩餘時間繼續
   stop():   void   // 停止並清除 interval
   getRemainingMs(): number  // 取得剩餘毫秒數
+  addTime(sec: number): void // 延長計時（道具 +10秒用）
 }
+```
+
+---
+
+## 模組：GameSession（陣列新增）
+
+```javascript
+/**
+ * 跳過目前題目，不扣血但連答歸零
+ * @param {GameSession} session
+ * @returns {void}  - session.questions 最後一題 result 設為 'skipped'
+ */
+function skipQuestion(session): void
+```
+
+同模組已有函式行為變更：
+- `answerQuestion(session, selectedAnswer)` 現在設定 `q.gained`（得分）且更新 `session.streak`
+
+---
+
+## 模組：CoinStorage
+
+```javascript
+// 金幣與道具庫存管理（localStorage 持久化）
+
+/** 取得總金幣數 */
+function getCoins(): number
+
+/** 增加金幣，回傳最新金幣數 */
+function addCoins(n: number): number
+
+/**
+ * 扣減金幣（購買用）
+ * @returns {boolean} - 金幣足夠則扣減並回傳 true；不足回傳 false
+ */
+function spendCoins(n: number): boolean
+
+/** 取得庫存物件 `{ [itemId]: number }` */
+function getInventory(): Record<string, number>
+
+/** 增加一個道具至庫存 */
+function addItem(itemId: string): void
+
+/**
+ * 使用一個道具（庫存 -1）
+ * @returns {boolean} - 有庫存則消耗並回傳 true；無庫存回傳 false
+ */
+function useItem(itemId: string): boolean
+
+/** 可用道具常數 */
+const SHOP_ITEMS: Array<{ id: string, icon: string, name: string, price: number }>
 ```
 
 ---
@@ -147,3 +199,4 @@ function buildCsvFilename(datetime: string): string
 | `game:restart` | 結束畫面點選「再玩一次」 | `{}` |
 | `nav:leaderboard` | 點選「查看排行榜」 | `{}` |
 | `nav:home` | 排行榜點選返回 | `{}` |
+| `nav:shop` | 首頁/結果點選進入商店 | `{}` |

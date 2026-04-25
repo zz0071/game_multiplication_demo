@@ -122,6 +122,43 @@
 
 ---
 
+## Phase 8: 2026-04-25 功能擴充（音效 Web Audio、UI 多巴胺、關卡/積分/商店）
+
+**Purpose**: 將今日實作的四大功能加入任務紀錄，標記為已完成
+
+### 8A: Web Audio API 音效系統
+
+- [X] T029 [P] 重寫 js/audio/AudioManager.js — 放棄 HTMLAudio + MP3 佔位符方案；改用 Web Audio API (`AudioContext`) 即時合成 5 種音效：答對琶音（C5→E5→G5 sine）、答錯鋸齒波（Bb4→G4）、過關勝利（C5→E5→G5→C6）、遊戲結束（G4→F4→Eb4 triangle）、8-bit BGM 循環（130BPM square wave）；`toggleBgm()` 回傳 boolean；`init()` 於首次使用者互動後建立 AudioContext
+- [X] T030 [P] 在 index.html HUD 新增 BGM 開關按鈕 — `<button id="btn-bgm" class="btn btn--icon btn--bgm-on">🔊</button>`；在 `.hud-btns` wrapper 中與暫停鈕並排
+- [X] T031 整合 BGM 開關至 GameScreen.js — 新增 `_onToggleBgm()` 方法；點擊後呼叫 `AudioManager.toggleBgm()`，依回傳值切換 `.btn--bgm-on`/`.btn--bgm-off` class 及按鈕文字
+
+### 8B: UI 多巴胺優化
+
+- [X] T032 [P] css/main.css — 新增 6 個霓虹色 CSS 自訂屬性（`--neon-cyan/pink/orange/green/yellow/purple`）；首頁標題改為彩虹流動漸層文字（`@keyframes rainbowShift`）；動態彩色星空背景（`@keyframes twinkleStars`）；強化按鈕霓虹光暈效果
+- [X] T033 [P] css/game.css — 6 個選項卡改為彩色霓虹主題（CSS 自訂屬性 `--card-color/dark/mid` 搭配 nth-child）；計時條加粗至 14px 並加漸層；`.timer-bar--danger` 脈動動畫；`.hud-streak` 連答火焰顯示（3 段 CSS class：warm/hot/epic）；`.score-popup` 浮現動畫（`@keyframes scoreFloat`）；`.confetti-piece` 彩帶動畫（`@keyframes confettiFall`）
+- [X] T034 [P] js/ui/Animations.js — 新增 `playScorePopup(points, anchorEl)` 建立浮現 +N 分 div；新增 `playConfetti(count)` 建立彩帶紙屑；`playStageClear()` 呼叫 `playConfetti(60)`
+- [X] T035 GameScreen.js — 新增 `_updateStreakDisplay()` 更新火焰連答 HUD；答對後呼叫 `playScorePopup(q.gained, this._enemyEl)`
+
+### 8C: 關卡名稱 & 積分系統
+
+- [X] T036 [P] js/game/GameSession.js — 新增 `streak: 0` 欄位；`answerQuestion()` 計算速度加分（SPEED_TIERS `[[5,8],[10,5],[20,2]]`）與連答倍率（`streakMultiplier(streak)`：≥3 ×1.5、≥5 ×2.0、≥10 ×3.0）；設定 `q.gained`；新增 `skipQuestion(session)` 函式（result='skipped'，不扣血，streak=0）；MAX_SCORE 改為 1500
+- [X] T037 [P] js/game/Scoring.js — `buildScoreRecord()` 加入 `coinsEarned: Math.floor(session.score / 10)`；`wrongCount` 排除 result==='skipped'
+- [X] T038 GameScreen.js — 新增 `STAGE_NAMES` 陣列（10 段關卡名稱：新手→地獄）；`_loadQuestion()` 顯示關卡名稱至 HUD
+
+### 8D: 金幣系統 & 道具商店
+
+- [X] T039 [P] 建立 js/data/CoinStorage.js — 匯出 `getCoins()`、`addCoins(n)`、`spendCoins(n)`、`getInventory()`、`addItem(id)`、`useItem(id)`、`SHOP_ITEMS` 常數；localStorage keys `mgame_coins`/`mgame_items`
+- [X] T040 [P] 建立 js/ui/ShopScreen.js — `show()` 渲染 SHOP_ITEMS grid；`_onBuy(item)` 呼叫 `spendCoins/addItem`；`_toast(msg)` 顯示購買通知；「返回」按鈕派發 `nav:home`
+- [X] T041 在 index.html 新增商店畫面容器 — `#screen-shop`（含 `#shop-coins`、`#shop-items`、`#btn-back-from-shop`）；首頁新增「🏪 道具商店」按鈕 `#btn-shop-home`
+- [X] T042 [P] css/result.css — 完整商店樣式（`.shop-container`、`.shop-items` grid、`.shop-item`、`.shop-buy-btn`、`.shop-toast` + `@keyframes toastIn/toastOut`）
+- [X] T043 GameScreen.js — 新增道具欄 `_renderPowerups()` 渲染庫存按鈕；`_onUsePowerUp(type)` 處理 4 種道具效果（extraLife/skipQ/eliminate/timeBonus）；`_eliminateWrongOption()` 標記 `eliminated` class
+- [X] T044 ResultScreen.js — 匯入 `addCoins/getCoins`；`show()` 呼叫 `addCoins(record.coinsEarned)`；`_renderStats()` 新增本局金幣與累積金幣欄位
+- [X] T045 js/main.js — 匯入 `ShopScreen`；新增 `screens.shop`；監聽 `nav:shop` 事件並切換至商店畫面；HomeScreen 監聽 `#btn-shop-home`
+
+**Checkpoint**: 2026-04-25 四大功能全部實作完成並驗證無 TypeScript/Lint 錯誤
+
+---
+
 ## 依賴關係圖（使用者故事完成順序）
 
 ```

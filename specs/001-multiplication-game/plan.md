@@ -55,26 +55,26 @@ index.html                       # 遊戲入口（首頁：名稱輸入 + 開始
 css/
 ├── main.css                     # 全域樣式（太空主題、RWD、字型、顏色變數）
 ├── game.css                     # 遊戲主畫面元件樣式（算式區、選項圖卡、生命值列）
-└── result.css                   # 成績統計、排行榜畫面樣式
+└── result.css                   # 成績統計、排行榜畫面樣式，含道具商店畫面樣式
 js/
-├── main.js                      # 程式進入點、畫面路由切換（home/game/result/leaderboard）
+├── main.js                      # 程式進入點、畫面路由切換（home/game/result/leaderboard/shop）
 ├── game/
 │   ├── QuestionGenerator.js     # 題目產生（依關卡難度）、干擾選項生成、答案過濾
 │   ├── GameSession.js           # 遊戲局狀態管理（生命值、分數、關卡進度）
 │   ├── Timer.js                 # 倒數計時器（支援 pause/resume，用 performance.now()）
-│   └── Scoring.js               # 計分規則（答對 +10，星等換算）
+    └── Scoring.js               # 計分規則（基礎 +10、速度加分、連答倍率、星等換算）
 ├── ui/
-│   ├── HomeScreen.js            # 首頁 UI（名稱輸入、開始按鈕）
-│   ├── GameScreen.js            # 遊戲主畫面 UI（算式、6 選項圖卡、生命值、暫停鍵）
-│   ├── PauseOverlay.js          # 暫停遮罩（凍結計時，顯示繼續按鈕）
-│   ├── ResultScreen.js          # 結束統計畫面（星等、錯題回顧、CSV 下載、排行榜連結）
-│   ├── LeaderboardScreen.js     # 排行榜畫面（前 10 名）
-│   └── Animations.js            # 動畫控制（擊落、受損、過關慶祝）
+    ├── HomeScreen.js            # 首頁 UI（名稱輸入、開始按鈕、進入商店鈕）
+    ├── GameScreen.js            # 遊戲主畫面 UI（算式、6 選項圖卡、生命値、連答火焰、道具欄、BGM 開關、暫停鈕）
+    ├── PauseOverlay.js          # 暫停遥罩（凍結計時，顯示繼續按鈕）
+    ├── ResultScreen.js          # 結束統計畫面（星等、錯題回顾、CSV 下載、金幣顯示、排行榜連結）
+    ├── LeaderboardScreen.js     # 排行榜畫面（前 10 名）
+    ├── ShopScreen.js            # 道具商店畫面（金幣顯示、鵰買連鍵）
+    └── Animations.js            # 動畫控制（擊落、受損、過關慶祝、彩帶紙屑、分數浮現）
 ├── data/
-│   ├── Storage.js               # localStorage 讀寫封裝（排行榜儲存/讀取）
-│   └── CsvExporter.js           # CSV 字串產生 + Blob 下載觸發
+│   ├── Storage.js               # localStorage 讀寫封裝（排行榜儲存/讀取）    ├── CoinStorage.js           # 金幣與道具庫存管理（跨局持久化）│   └── CsvExporter.js           # CSV 字串產生 + Blob 下載觸發
 └── audio/
-    └── AudioManager.js          # 音效管理（bgm loop、答對、答錯、過關、結束）
+    └── AudioManager.js          # 音效管理（Web Audio API 即時合成：bgm loop、答對、答錯、過關、結束）
 
 assets/
 ├── images/
