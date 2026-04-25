@@ -15,6 +15,13 @@
   --color-text:      #e8eaf6;
   --color-text-dim:  #8892b0;
   --color-border:    #1e3a6e;
+  /* 霓虹色 — 選項卡、特效專用 */
+  --neon-cyan:       #00d2ff;
+  --neon-pink:       #ff6fd8;
+  --neon-orange:     #ff9a3c;
+  --neon-green:      #6bcb77;
+  --neon-yellow:     #ffd93d;
+  --neon-purple:     #b388ff;
 
   /* 字型 */
   --font-base: 'Segoe UI', 'Microsoft JhengHei', '微軟正黑體', sans-serif;
@@ -94,9 +101,16 @@ html, body {
     radial-gradient(1px 1px at 95% 20%, #fff 0%, transparent 100%),
     radial-gradient(2px 2px at 20% 80%, rgba(255,255,255,.5) 0%, transparent 100%),
     radial-gradient(2px 2px at 50% 90%, rgba(255,255,255,.4) 0%, transparent 100%),
-    radial-gradient(2px 2px at 80% 85%, rgba(255,255,255,.6) 0%, transparent 100%);
+    radial-gradient(2px 2px at 80% 85%, rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 33% 22%, rgba(0,210,255,.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 66% 72%, rgba(255,111,216,.8) 0%, transparent 100%),
+    radial-gradient(2px 2px at 12% 52%, rgba(179,136,255,.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 38%, rgba(107,203,119,.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 44% 64%, rgba(255,217,61,.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 28%, rgba(255,154,60,.6) 0%, transparent 100%);
   pointer-events: none;
   z-index: 0;
+  animation: twinkleStars 8s ease-in-out infinite alternate;
 }
 
 /* ---------- 按鈕元件 ---------- */
@@ -137,8 +151,8 @@ html, body {
 
 .btn--primary:hover:not(:disabled) {
   background: var(--color-primary-h);
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(30,144,255,.6);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 0 30px rgba(30,144,255,.8), 0 6px 20px rgba(0,0,0,.3);
 }
 
 .btn--primary:active:not(:disabled) {
@@ -214,10 +228,16 @@ html, body {
 }
 
 .game-title {
-  font-size: var(--font-size-2xl);
-  color: var(--color-accent);
-  text-shadow: 0 0 20px rgba(247,201,72,.5);
-  letter-spacing: 2px;
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  background: linear-gradient(90deg,
+    #ff6fd8, #b388ff, #00d2ff, #6bcb77, #ffd93d, #ff9a3c, #ff6fd8);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbowShift 5s linear infinite;
+  letter-spacing: 3px;
+  filter: drop-shadow(0 0 14px rgba(179,136,255,.6));
 }
 
 .game-subtitle {
@@ -293,4 +313,17 @@ html, body {
   :root {
     --font-size-base: 20px;
   }
+}
+
+/* ---------- 全域特效 @keyframes ---------- */
+
+@keyframes rainbowShift {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 300% center; }
+}
+
+@keyframes twinkleStars {
+  0%   { opacity: 0.7; filter: brightness(1);   }
+  50%  { opacity: 1;   filter: brightness(1.6); }
+  100% { opacity: 0.8; filter: brightness(1.1); }
 }

@@ -21,21 +21,49 @@
 }
 
 .result-title {
-  font-size: var(--font-size-xl);
-  color: var(--color-accent);
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  background: linear-gradient(90deg, #ff6fd8, #b388ff, #00d2ff, #ffd93d, #ff6fd8);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   letter-spacing: 2px;
   text-align: center;
+  animation: rainbowShift 5s linear infinite;
+  filter: drop-shadow(0 0 12px rgba(179,136,255,.4));
 }
 
 /* ---------- 星等顯示 ---------- */
 .stars-display {
-  font-size: 2rem;
-  letter-spacing: 4px;
+  font-size: 2.2rem;
+  letter-spacing: 6px;
   text-align: center;
 }
 
-.stars-display .star-filled { color: var(--color-accent); }
-.stars-display .star-empty  { color: var(--color-border);  opacity: .4; }
+.stars-display .star-filled {
+  color: var(--color-accent);
+  display: inline-block;
+  animation: starPop 0.5s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+.stars-display .star-filled:nth-child(1)  { animation-delay: 0.00s; }
+.stars-display .star-filled:nth-child(2)  { animation-delay: 0.07s; }
+.stars-display .star-filled:nth-child(3)  { animation-delay: 0.14s; }
+.stars-display .star-filled:nth-child(4)  { animation-delay: 0.21s; }
+.stars-display .star-filled:nth-child(5)  { animation-delay: 0.28s; }
+.stars-display .star-filled:nth-child(6)  { animation-delay: 0.35s; }
+.stars-display .star-filled:nth-child(7)  { animation-delay: 0.42s; }
+.stars-display .star-filled:nth-child(8)  { animation-delay: 0.49s; }
+.stars-display .star-filled:nth-child(9)  { animation-delay: 0.56s; }
+.stars-display .star-filled:nth-child(10) { animation-delay: 0.63s; }
+
+.stars-display .star-empty { color: var(--color-border); opacity: .4; }
+
+@keyframes starPop {
+  0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60%  { transform: scale(1.5) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
 
 /* ---------- 分數統計 ---------- */
 .score-stats {
@@ -44,10 +72,11 @@
   gap: var(--space-sm) var(--space-lg);
   width: 100%;
   max-width: 420px;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #120840, #0d1b3e);
+  border: 1px solid rgba(179,136,255,.3);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+  box-shadow: 0 0 30px rgba(124,77,255,.12), inset 0 0 40px rgba(0,210,255,.04);
 }
 
 .stat-item {

@@ -113,28 +113,33 @@
 .timer-bar-wrap {
   width: 100%;
   max-width: 480px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.3);
 }
 
 .timer-bar {
   height: 100%;
   width: 100%;
-  background: var(--color-primary);
-  border-radius: 4px;
+  background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
+  border-radius: 8px;
   transition: width 0.9s linear, background 0.5s;
   transform-origin: left;
+  box-shadow: 0 0 10px rgba(0,210,255,.4);
 }
 
 .timer-bar--warning {
-  background: var(--color-accent);
+  background: linear-gradient(90deg, var(--neon-orange), var(--neon-yellow));
+  box-shadow: 0 0 10px rgba(255,217,61,.4);
 }
 
 .timer-bar--danger {
-  background: var(--color-danger);
+  background: linear-gradient(90deg, #ff6b6b, #ff4d4f);
+  box-shadow: 0 0 14px rgba(255,107,107,.7);
+  animation: timerPulse 0.4s ease-in-out infinite alternate;
 }
 
 /* ---------- 選項圖卡 Grid ---------- */
@@ -148,38 +153,48 @@
 
 .option-card {
   aspect-ratio: 1.6 / 1;
-  background: linear-gradient(135deg, #0f2050, #091530);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, var(--card-dark, #0c1840), var(--card-mid, #142060));
+  border: 2px solid var(--card-color, var(--color-border));
+  border-top-width: 4px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(1.1rem, 3vw, 1.5rem);
-  font-weight: 700;
-  color: var(--color-text);
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  font-weight: 900;
+  color: #fff;
   cursor: pointer;
   user-select: none;
+  text-shadow: 0 2px 6px rgba(0,0,0,.5);
   transition:
-    transform var(--duration-fast),
+    transform 120ms cubic-bezier(.34,1.56,.64,1),
     border-color var(--duration-fast),
     box-shadow var(--duration-fast),
     background var(--duration-fast);
 }
 
+/* 每張卡片獨立霓虹配色 */
+.option-card:nth-child(1) { --card-color: var(--neon-cyan);   --card-dark: #001e33; --card-mid: #003355; }
+.option-card:nth-child(2) { --card-color: var(--neon-pink);   --card-dark: #330022; --card-mid: #550044; }
+.option-card:nth-child(3) { --card-color: var(--neon-orange); --card-dark: #331500; --card-mid: #552400; }
+.option-card:nth-child(4) { --card-color: var(--neon-purple); --card-dark: #1a0044; --card-mid: #2d0066; }
+.option-card:nth-child(5) { --card-color: var(--neon-green);  --card-dark: #002211; --card-mid: #003d1e; }
+.option-card:nth-child(6) { --card-color: var(--neon-yellow); --card-dark: #332200; --card-mid: #4d3300; }
+
 .option-card:hover:not(.disabled) {
-  border-color: var(--color-primary);
-  background: linear-gradient(135deg, #1a3a80, #0d2050);
-  transform: scale(1.04);
-  box-shadow: 0 0 12px rgba(30, 144, 255, 0.4);
+  border-color: var(--card-color, var(--color-primary));
+  transform: scale(1.09) translateY(-4px);
+  box-shadow: 0 0 24px var(--card-color, rgba(30,144,255,.5)),
+              0 8px 20px rgba(0,0,0,.4);
 }
 
 .option-card:active:not(.disabled) {
-  transform: scale(0.97);
+  transform: scale(0.93);
 }
 
 .option-card.disabled {
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .option-card.correct {
@@ -227,12 +242,17 @@
 }
 
 .stage-clear-text {
-  font-size: var(--font-size-2xl);
+  font-size: clamp(2rem, 8vw, 4rem);
   font-weight: 900;
-  color: var(--color-accent);
+  background: linear-gradient(90deg, #ffd93d, #ff9a3c, #ff6fd8, #b388ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-align: center;
-  text-shadow: 0 0 20px rgba(247, 201, 72, 0.8);
-  animation: stageClearText 800ms ease-out forwards;
+  filter: drop-shadow(0 0 18px rgba(255,154,60,.9));
+  animation: stageClearText 900ms cubic-bezier(.34,1.56,.64,1) forwards,
+             rainbowShift 2s linear infinite;
 }
 
 /* ---------- 暫停遮罩 ---------- */
@@ -321,10 +341,52 @@
 
 /* 過關文字縮放 */
 @keyframes stageClearText {
-  0%   { transform: scale(0.5); opacity: 0; }
-  30%  { transform: scale(1.1); opacity: 1; }
+  0%   { transform: scale(0.4); opacity: 0; }
+  30%  { transform: scale(1.2); opacity: 1; }
   70%  { transform: scale(1.0); opacity: 1; }
-  100% { transform: scale(1.2); opacity: 0; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* 倒數條危險閃爍 */
+@keyframes timerPulse {
+  0%   { opacity: 1;   box-shadow: 0 0 12px rgba(255,107,107,.6); }
+  100% { opacity: 0.5; box-shadow: 0 0 28px rgba(255,107,107,1);  }
+}
+
+/* ---------- 分數浮現特效 ---------- */
+.score-popup {
+  position: fixed;
+  transform: translateX(-50%);
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 14px rgba(255,217,61,.9), 0 2px 8px rgba(0,0,0,.6);
+  pointer-events: none;
+  z-index: 9998;
+  white-space: nowrap;
+  animation: scoreFloat 1.1s cubic-bezier(.22,.61,.36,1) forwards;
+}
+
+@keyframes scoreFloat {
+  0%   { transform: translateX(-50%) translateY(0)      scale(0.4); opacity: 1; }
+  25%  { transform: translateX(-50%) translateY(-28px)  scale(1.5); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(-130px) scale(1.1); opacity: 0; }
+}
+
+/* ---------- 彩帶紙屑 ---------- */
+.confetti-piece {
+  position: fixed;
+  top: -12px;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 2px;
+  animation: confettiFall 2s ease-in forwards;
+}
+
+@keyframes confettiFall {
+  0%   { transform: translateY(0)      rotate(0deg)   scaleX(1);  opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translateY(105vh)  rotate(540deg) scaleX(-1); opacity: 0; }
 }
 
 /* ---------- RWD ---------- */

@@ -13,7 +13,7 @@ import {
   isStageClear,
   isGameOver,
 } from '../game/GameSession.js';
-import { playCorrect, playWrong, playStageClear, playEnemyEnter } from './Animations.js';
+import { playCorrect, playWrong, playStageClear, playEnemyEnter, playScorePopup } from './Animations.js';
 import { PauseOverlay } from './PauseOverlay.js';
 import { AudioManager } from '../audio/AudioManager.js';
 
@@ -134,6 +134,7 @@ export class GameScreen {
     // 禁用所有選項
     this._setOptionsDisabled(true);
 
+    const scoreBefore = this._session.score;
     const result = answerQuestion(this._session, selectedValue, timeUsed);
     const q      = this._session.questions[this._session.questions.length - 1];
 
@@ -149,7 +150,9 @@ export class GameScreen {
 
     // 動畫 + 音效
     if (result === 'correct') {
+      const gained = this._session.score - scoreBefore;
       AudioManager.play('correct');
+      playScorePopup(gained, this._enemyEl);
       await playCorrect(this._enemyEl);
     } else {
       AudioManager.play('wrong');
