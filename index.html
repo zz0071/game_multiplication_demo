@@ -28,7 +28,10 @@
         >
         <button id="btn-start" class="btn btn--primary btn--large">🚀 開始遊戲</button>
       </div>
-      <button id="btn-leaderboard-home" class="btn btn--ghost">🏆 查看排行榜</button>
+      <div class="home-actions">
+        <button id="btn-leaderboard-home" class="btn btn--ghost">🏆 查看排行榜</button>
+        <button id="btn-shop-home" class="btn btn--ghost">🏪 道具商店</button>
+      </div>
     </div>
   </div>
 
@@ -40,10 +43,15 @@
       <div class="hud-center">
         <span class="hud-stage" id="hud-stage">關卡 1</span>
         <span class="hud-score" id="hud-score">0 分</span>
+        <span class="hud-streak" id="hud-streak"></span>
       </div>
-      <button id="btn-bgm" class="btn btn--icon btn--bgm-on" aria-label="切換背景音樂" title="切換 BGM">🔊</button>
-      <button id="btn-pause" class="btn btn--icon" aria-label="暫停遊戲">⏸</button>
+      <div class="hud-btns">
+        <button id="btn-bgm" class="btn btn--icon btn--bgm-on" aria-label="切換背景音樂" title="切換 BGM">🔊</button>
+        <button id="btn-pause" class="btn btn--icon" aria-label="暫停遊戲">⏸</button>
+      </div>
     </header>
+    <!-- 道具欄 -->
+    <div class="powerup-bar" id="powerup-bar"></div>
 
     <!-- 遊戲區域 -->
     <main class="game-arena">
@@ -94,6 +102,17 @@
       <h2 class="leaderboard-title">🏆 排行榜 TOP 10</h2>
       <div id="leaderboard-table"></div>
       <button id="btn-back-home" class="btn btn--ghost">← 返回首頁</button>
+    </div>
+  </div>
+
+  <!-- ===== 商店畫面 ===== -->
+  <div id="screen-shop" class="screen screen--hidden">
+    <div class="shop-container">
+      <h2 class="shop-title">🏪 道具商店</h2>
+      <div class="shop-coins" id="shop-coins">💰 0 金幣</div>
+      <p class="shop-hint">每局得分 ÷ 10 = 金幣數，遊戲中可使用道具</p>
+      <div class="shop-items" id="shop-items"></div>
+      <button id="btn-back-from-shop" class="btn btn--ghost">← 返回首頁</button>
     </div>
   </div>
 

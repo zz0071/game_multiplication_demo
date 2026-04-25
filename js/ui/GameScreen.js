@@ -9,16 +9,21 @@ import {
   createGameSession,
   getCurrentQuestion,
   answerQuestion,
+  skipQuestion,
   nextQuestion,
   isStageClear,
   isGameOver,
 } from '../game/GameSession.js';
 import { playCorrect, playWrong, playStageClear, playEnemyEnter, playScorePopup } from './Animations.js';
 import { PauseOverlay } from './PauseOverlay.js';
-import { AudioManager } from '../audio/AudioManager.js';
+import { AudioManager }  from '../audio/AudioManager.js';
+import { useItem, getInventory } from '../data/CoinStorage.js';
 
 const TIMER_SEC      = 30;
-const FEEDBACK_DELAY = 400; // ms — 答題後等待動畫再進下一題
+const FEEDBACK_DELAY = 400; // ms
+
+/** 關卡難度名稱 */
+const STAGE_NAMES = ['','新手','入門','初級','初中','中級','中高','高級','困難','超難','地獄'];
 
 export class GameScreen {
   /**
@@ -32,6 +37,8 @@ export class GameScreen {
     this._livesEl    = container.querySelector('#hud-lives');
     this._stageEl    = container.querySelector('#hud-stage');
     this._scoreEl    = container.querySelector('#hud-score');
+    this._streakEl   = container.querySelector('#hud-streak');
+    this._powerupBar = container.querySelector('#powerup-bar');
     this._shipEl     = container.querySelector('#player-ship');
     this._enemyEl    = container.querySelector('#enemy-ship');
     this._pauseBtn   = container.querySelector('#btn-pause');
@@ -73,9 +80,12 @@ export class GameScreen {
     const q       = getCurrentQuestion(session);
 
     // 更新 HUD
-    this._stageEl.textContent = `關卡 ${session.currentStage}`;
+    const stageName = STAGE_NAMES[session.currentStage] || '';
+    this._stageEl.textContent = `關卡 ${session.currentStage}/10　${stageName}`;
     this._scoreEl.textContent = `${session.score} 分`;
     this._renderLives(session.lives);
+    this._updateStreakDisplay();
+    this._renderPowerups();
 
     // 顯示算式
     this._equationEl.textContent = `${q.multiplicand} × ${q.multiplier} = ?`;
@@ -153,9 +163,11 @@ export class GameScreen {
       const gained = this._session.score - scoreBefore;
       AudioManager.play('correct');
       playScorePopup(gained, this._enemyEl);
+      this._updateStreakDisplay();
       await playCorrect(this._enemyEl);
     } else {
       AudioManager.play('wrong');
+      this._updateStreakDisplay();
       await playWrong(this._shipEl);
       // 更新生命值顯示
       this._renderLives(this._session.lives);
@@ -213,6 +225,100 @@ export class GameScreen {
     this._bgmBtn.textContent  = isOn ? '🔊' : '🔇';
     this._bgmBtn.classList.toggle('btn--bgm-on',  isOn);
     this._bgmBtn.classList.toggle('btn--bgm-off', !isOn);
+  }
+
+  // ── 連答顯示 ──────────────────────────────────────────────
+  _updateStreakDisplay() {
+    const s = this._session?.streak ?? 0;
+    if (!this._streakEl) return;
+    if (s < 3) { this._streakEl.textContent = ''; this._streakEl.className = 'hud-streak'; return; }
+    const flames = s >= 10 ? '🔥🔥🔥' : s >= 5 ? '🔥🔥' : '🔥';
+    const mult   = s >= 10 ? '×3.0'    : s >= 5  ? '×2.0'  : '×1.5';
+    this._streakEl.textContent = `${flames} ${s}連答 ${mult}`;
+    this._streakEl.className   = 'hud-streak' +
+      (s >= 10 ? ' streak--epic' : s >= 5 ? ' streak--hot' : ' streak--warm');
+  }
+
+  // ── 道具欄 ──────────────────────────────────────────────
+  _renderPowerups() {
+    if (!this._powerupBar) return;
+    const inv = getInventory();
+    const META = {
+      extraLife: { icon: '🛡️', label: '+命'   },
+      skipQ:     { icon: '⏩', label: '跳題'  },
+      eliminate: { icon: '💡', label: '排除'  },
+      timeBonus: { icon: '⏱️', label: '+10秒' },
+    };
+    const btns = Object.entries(inv)
+      .filter(([, qty]) => qty > 0)
+      .map(([id, qty]) => {
+        const m = META[id] || { icon: '?', label: id };
+        return `<button class="powerup-btn" data-type="${id}" title="${m.label}">
+          ${m.icon} ${m.label} <span class="powerup-qty">×${qty}</span>
+        </button>`;
+      });
+    this._powerupBar.innerHTML = btns.length
+      ? btns.join('')
+      : '<span class="powerup-empty">（無道具）</span>';
+    this._powerupBar.querySelectorAll('.powerup-btn').forEach(btn => {
+      btn.addEventListener('click', () => this._onUsePowerUp(btn.dataset.type));
+    });
+  }
+
+  // ── 使用道具 ──────────────────────────────────────────────
+  async _onUsePowerUp(type) {
+    if (this._answering || this._session?.isPaused) return;
+    if (!useItem(type)) return;
+
+    switch (type) {
+      case 'extraLife':
+        this._session.lives = Math.min(10, this._session.lives + 1);
+        this._renderLives(this._session.lives);
+        break;
+
+      case 'skipQ': {
+        this._answering = true;
+        if (this._timer) this._timer.stop();
+        this._setOptionsDisabled(true);
+        skipQuestion(this._session);
+        this._updateStreakDisplay();
+        await this._sleep(300);
+
+        const answered  = this._session.questions.length;
+        const allDone   = answered >= 50;
+        const livesGone = isGameOver(this._session);
+        if (livesGone || allDone) { this._endGame(); return; }
+
+        const stageDone = isStageClear(this._session);
+        nextQuestion(this._session);
+        if (stageDone) {
+          AudioManager.play('stageClear');
+          await playStageClear(this._session.currentStage - 1);
+        }
+        this._answering = false;
+        this._loadQuestion();
+        break;
+      }
+
+      case 'eliminate':
+        this._eliminateWrongOption();
+        break;
+
+      case 'timeBonus':
+        if (this._timer) this._timer.addTime(10);
+        break;
+    }
+    this._renderPowerups();
+  }
+
+  // ── 消去一個錯誤選項 ──────────────────────────────────────
+  _eliminateWrongOption() {
+    const correctVal = this._session._currentQuestion?.correctAnswer;
+    const cards      = [...this._optionsEl.querySelectorAll('.option-card:not(.disabled)')];
+    const wrong      = cards.filter(c => Number(c.textContent.trim()) !== correctVal);
+    if (!wrong.length) return;
+    const target = wrong[Math.floor(Math.random() * wrong.length)];
+    target.classList.add('disabled', 'eliminated');
   }
 
 

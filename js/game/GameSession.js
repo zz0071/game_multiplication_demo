@@ -10,7 +10,18 @@ const LIVES_INIT  = 10;
 const STAGES      = 10;
 const Q_PER_STAGE = 5;
 const SCORE_PER_Q = 10;
-const MAX_SCORE   = 500;
+const MAX_SCORE   = 1500; // 上調以容納速度/連答加成
+
+/** 速度加分門檻：[最大秒數, 加分] */
+const SPEED_TIERS = [[5, 8], [10, 5], [20, 2]];
+
+/** 連答倍率 */
+function streakMultiplier(streak) {
+  if (streak >= 10) return 3.0;
+  if (streak >= 5)  return 2.0;
+  if (streak >= 3)  return 1.5;
+  return 1.0;
+}
 
 /**
  * 建立新的遊戲局物件
@@ -26,6 +37,7 @@ export function createGameSession(playerName) {
     totalQuestionIndex:    0,     // 全局第幾題（0–49）
     score:                 0,
     lives:                 LIVES_INIT,
+    streak:                0,     // 連答數（答錯/超時/跳過 歸零）
     questions:             [],    // 已出現的題目記錄
     isPaused:              false,
     pausedAt:              null,  // 暫停時的 performance.now()
@@ -61,15 +73,33 @@ export function answerQuestion(session, answer, timeUsedSec) {
   q.timeUsedSec = timeUsedSec;
 
   if (answer === null) {
-    q.result      = 'timeout';
+    q.result       = 'timeout';
     q.playerAnswer = null;
+    q.gained       = 0;
+    session.streak = 0;
   } else if (answer === q.correctAnswer) {
     q.result       = 'correct';
     q.playerAnswer = answer;
-    session.score  = Math.min(MAX_SCORE, session.score + SCORE_PER_Q);
+    session.streak++;
+
+    // 速度加分
+    let speedBonus = 0;
+    for (const [maxSec, bonus] of SPEED_TIERS) {
+      if (timeUsedSec <= maxSec) { speedBonus = bonus; break; }
+    }
+    // 連答倍率
+    const mult   = streakMultiplier(session.streak);
+    const gained = Math.min(
+      MAX_SCORE - session.score,
+      Math.round((SCORE_PER_Q + speedBonus) * mult)
+    );
+    session.score += gained;
+    q.gained       = gained;
   } else {
     q.result       = 'wrong';
     q.playerAnswer = answer;
+    q.gained       = 0;
+    session.streak = 0;
   }
 
   if (q.result !== 'correct') session.lives--;
@@ -78,6 +108,22 @@ export function answerQuestion(session, answer, timeUsedSec) {
   session._currentQuestion = null;
 
   return q.result;
+}
+
+/**
+ * 跳過本題（道具效果）— 不扣血、連答歸零
+ * @param {object} session
+ */
+export function skipQuestion(session) {
+  const q = session._currentQuestion;
+  if (!q) return;
+  q.result       = 'skipped';
+  q.playerAnswer = null;
+  q.timeUsedSec  = 0;
+  q.gained       = 0;
+  session.streak = 0;
+  session.questions.push(q);
+  session._currentQuestion = null;
 }
 
 /**

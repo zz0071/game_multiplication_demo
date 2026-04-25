@@ -85,5 +85,13 @@ export function createTimer(durationSec, onTick, onExpire) {
       // 已暫停或尚未啟動：回傳快照值
       return Math.max(0, remainingMs);
     },
+
+    /** 延長計時秒數（道具：+10 秒效果） */
+    addTime(sec) {
+      if (!started || intervalId === null) return;
+      remainingMs += sec * 1000;
+      deadline     = performance.now() + remainingMs;
+      onTick(Math.ceil(remainingMs / 1000));
+    },
   };
 }

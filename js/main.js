@@ -8,6 +8,7 @@ import { HomeScreen }        from './ui/HomeScreen.js';
 import { GameScreen }        from './ui/GameScreen.js';
 import { ResultScreen }      from './ui/ResultScreen.js';
 import { LeaderboardScreen } from './ui/LeaderboardScreen.js';
+import { ShopScreen }        from './ui/ShopScreen.js';
 import { buildScoreRecord }  from './game/Scoring.js';
 import { saveToLeaderboard } from './data/Storage.js';
 
@@ -17,6 +18,7 @@ const screens = {
   game:        document.getElementById('screen-game'),
   result:      document.getElementById('screen-result'),
   leaderboard: document.getElementById('screen-leaderboard'),
+  shop:        document.getElementById('screen-shop'),
 };
 
 /**
@@ -35,6 +37,7 @@ let homeScreen        = null;
 let gameScreen        = null;
 let resultScreen      = null;
 let leaderboardScreen = null;
+let shopScreen        = null;
 
 /** 目前遊戲局（GameScreen 結束後傳回） */
 let currentSession    = null;
@@ -46,6 +49,7 @@ function init() {
   gameScreen        = new GameScreen(document.getElementById('screen-game'));
   resultScreen      = new ResultScreen(document.getElementById('screen-result'));
   leaderboardScreen = new LeaderboardScreen(document.getElementById('screen-leaderboard'));
+  shopScreen        = new ShopScreen(document.getElementById('screen-shop'));
 
   registerEvents();
 
@@ -83,6 +87,12 @@ function registerEvents() {
   document.addEventListener('nav:leaderboard', () => {
     leaderboardScreen.show();
     showScreen('leaderboard');
+  });
+
+  // 前往商店
+  document.addEventListener('nav:shop', () => {
+    shopScreen.show();
+    showScreen('shop');
   });
 
   // 從排行榜返回首頁

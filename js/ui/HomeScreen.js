@@ -29,6 +29,14 @@ export class HomeScreen {
     this._lbEl.addEventListener('click', () => {
       document.dispatchEvent(new CustomEvent('nav:leaderboard'));
     });
+
+    // 點選商店按鈕
+    const shopBtn = this._el.querySelector('#btn-shop-home');
+    if (shopBtn) {
+      shopBtn.addEventListener('click', () => {
+        document.dispatchEvent(new CustomEvent('nav:shop'));
+      });
+    }
   }
 
   _onStart() {

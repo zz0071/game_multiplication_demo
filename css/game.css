@@ -24,6 +24,14 @@
   min-height: 56px;
   position: relative;
   z-index: 10;
+  gap: var(--space-sm);
+}
+
+/* HUD 按鈕群組 */
+.hud-btns {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
 }
 
 .hud-lives {
@@ -47,6 +55,23 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
+}
+
+/* 連答顯示 */
+.hud-streak {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  min-height: 1.1em;
+  transition: color 0.2s;
+}
+.streak--warm { color: #ffd93d; }
+.streak--hot  { color: #ff9a3c; animation: streakPulse 0.8s ease-in-out infinite alternate; }
+.streak--epic { color: #ff6fd8; animation: streakPulse 0.5s ease-in-out infinite alternate; }
+
+@keyframes streakPulse {
+  from { filter: brightness(1);   transform: scale(1);    }
+  to   { filter: brightness(1.6); transform: scale(1.06); }
 }
 
 .hud-stage {
@@ -195,6 +220,61 @@
 .option-card.disabled {
   pointer-events: none;
   opacity: 0.45;
+}
+
+.option-card.eliminated {
+  pointer-events: none;
+  opacity: 0.18;
+  text-decoration: line-through;
+  border-color: rgba(255,255,255,.1) !important;
+  background: rgba(0,0,0,.5) !important;
+}
+
+/* ---------- 道具欄 ---------- */
+.powerup-bar {
+  display: flex;
+  gap: var(--space-xs);
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-xs) var(--space-md);
+  background: rgba(5, 10, 26, 0.6);
+  border-bottom: 1px solid rgba(179,136,255,.15);
+  flex-wrap: wrap;
+  min-height: 36px;
+  flex-shrink: 0;
+}
+
+.powerup-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, #1a1050, #2d1a6e);
+  border: 1.5px solid var(--neon-purple);
+  border-radius: 20px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 100ms, box-shadow 100ms;
+  user-select: none;
+}
+
+.powerup-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(179,136,255,.6);
+}
+.powerup-btn:active { transform: scale(0.92); }
+
+.powerup-qty {
+  font-size: 0.72rem;
+  color: var(--neon-yellow);
+  font-weight: 900;
+}
+
+.powerup-empty {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,.3);
 }
 
 .option-card.correct {

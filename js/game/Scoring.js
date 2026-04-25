@@ -55,10 +55,11 @@ export function buildScoreRecord(session, totalPausedMs) {
   const now          = new Date();
   const datetime     = formatDatetime(now);
   const correctCount = session.questions.filter(q => q.result === 'correct').length;
-  const wrongCount   = session.questions.filter(q => q.result !== 'correct').length;
+  const wrongCount   = session.questions.filter(q => q.result !== 'correct' && q.result !== 'skipped').length;
   const elapsedMs    = Date.now() - session.startTime - totalPausedMs;
   const durationSec  = Math.max(1, Math.round(elapsedMs / 1000));
   const stars        = calcStars(session.score);
+  const coinsEarned  = Math.floor(session.score / 10); // 每 10 分換 1 金幣
 
   return {
     playerName:   session.playerName || '玩家',
@@ -69,6 +70,7 @@ export function buildScoreRecord(session, totalPausedMs) {
     durationSec,
     datetime,
     date:         datetime.split(' ')[0],
+    coinsEarned,
   };
 }
 

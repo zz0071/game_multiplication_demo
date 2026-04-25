@@ -5,6 +5,7 @@
  */
 
 import { downloadScoreCsv } from '../data/CsvExporter.js';
+import { addCoins, getCoins } from '../data/CoinStorage.js';
 
 export class ResultScreen {
   /**
@@ -41,6 +42,8 @@ export class ResultScreen {
    */
   show(session, record) {
     this._record = record;
+    // 將本局金幣存入 localStorage
+    addCoins(record.coinsEarned || 0);
 
     this._renderStars(record.stars);
     this._renderStats(record);
@@ -60,6 +63,7 @@ export class ResultScreen {
 
   // ── 統計數值 ───────────────────────────────────────────────
   _renderStats(record) {
+    const totalCoins = getCoins();
     this._statsEl.innerHTML = `
       <div class="stat-item">
         <span class="stat-label">總分</span>
@@ -84,6 +88,14 @@ export class ResultScreen {
       <div class="stat-item">
         <span class="stat-label">玩家</span>
         <span class="stat-value" style="font-size:1rem">${_esc(record.playerName)}</span>
+      </div>
+      <div class="stat-item stat-item--coins">
+        <span class="stat-label">本局獲得</span>
+        <span class="stat-value stat-value--coins">💰 +${record.coinsEarned || 0} 金幣</span>
+      </div>
+      <div class="stat-item stat-item--coins">
+        <span class="stat-label">累積金幣</span>
+        <span class="stat-value stat-value--coins">💰 ${totalCoins} 金幣</span>
       </div>
     `;
   }

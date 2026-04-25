@@ -100,6 +100,155 @@
 .stat-value--accent { color: var(--color-accent); }
 .stat-value--success { color: var(--color-success); }
 .stat-value--danger  { color: var(--color-danger); }
+.stat-value--coins   { color: #ffd93d; text-shadow: 0 0 8px rgba(255,217,61,.5); }
+
+/* 金幣統計橫跨全欄 */
+.stat-item--coins {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  justify-content: space-between;
+  background: linear-gradient(90deg, rgba(255,217,61,.05), rgba(255,217,61,.12));
+  border: 1px solid rgba(255,217,61,.25);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+/* ---------- 商店畫面 ---------- */
+#screen-shop {
+  background: radial-gradient(ellipse at 50% 0%, #1a0a4a 0%, #050a1a 70%);
+  overflow-y: auto;
+}
+
+.shop-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 600px;
+  width: 100%;
+  animation: fadeIn 0.6s ease-out both;
+}
+
+.shop-title {
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  background: linear-gradient(90deg, #ffd93d, #ff9a3c, #ff6fd8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+}
+
+.shop-coins {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffd93d;
+  text-shadow: 0 0 14px rgba(255,217,61,.7);
+  letter-spacing: 1px;
+}
+
+.shop-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+  text-align: center;
+}
+
+.shop-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: linear-gradient(135deg, #120840, #0d1b3e);
+  border: 1px solid rgba(179,136,255,.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  transition: box-shadow var(--duration-fast);
+}
+
+.shop-item:hover {
+  box-shadow: 0 0 20px rgba(179,136,255,.2);
+}
+
+.shop-item-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 48px;
+  text-align: center;
+}
+
+.shop-item-body {
+  flex: 1;
+}
+
+.shop-item-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.shop-item-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-dim);
+  margin-top: 2px;
+}
+
+.shop-item-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.shop-item-price {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffd93d;
+}
+
+.shop-item-stock {
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
+}
+
+.shop-buy-btn {
+  padding: var(--space-xs) var(--space-md);
+  font-size: 0.85rem;
+  min-width: 60px;
+}
+
+/* 商店 Toast 通知 */
+.shop-toast {
+  position: fixed;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 10, 60, 0.95);
+  border: 1px solid var(--neon-purple);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  z-index: 9999;
+  white-space: nowrap;
+  animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 1.5s forwards;
+}
+
+@keyframes toastIn  { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* RWD */
+@media (max-width: 480px) {
+  .shop-item { flex-wrap: wrap; }
+  .shop-item-action { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; }
+}
 
 /* ---------- 錯題回顧 ---------- */
 .wrong-answers {
